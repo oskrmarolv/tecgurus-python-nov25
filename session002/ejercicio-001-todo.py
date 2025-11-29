@@ -86,9 +86,10 @@ def list_task (l, arg_trampa=[ 0 ]):
 #
 #     *args          define tupla de longitud "n"
 #     **kwargs       define un diccionario de claves "n"
-def complete_task (l, **tareas):
+def complete_task (l, *indice):
+# def complete_task (l, **tareas):
   print(l, type(l))
-  print(tareas, type(tareas))
+  print(indice, type(indice))
 
   return l
 
