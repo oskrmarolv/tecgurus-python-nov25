@@ -57,9 +57,10 @@ y = 2
 z = x + y     # suma
 z = x - y     # resta
 z = x * y     # multiplicacion
-z = x / 2     # divicion
-z = x ** y    # potencia
+z = x / 2     # divicion con punto flotante
+z = x // 2    # divicion entera
 z = x % y     # modulo (residuo en la division)
+z = x ** y    # potencia
 
 # comparacion
 

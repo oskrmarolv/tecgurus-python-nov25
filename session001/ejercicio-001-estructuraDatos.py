@@ -1,7 +1,7 @@
 #!/bin/python3
 
 """
-  TEMA: Estructuras de datos (list, dicc, tuple, par)
+  TEMA: Estructuras de datos (lists, dicts, tuples, pars, sets)
 """
 
 """

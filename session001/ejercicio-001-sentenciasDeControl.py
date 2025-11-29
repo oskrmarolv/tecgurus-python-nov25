@@ -9,6 +9,7 @@ IDENTACION: la definicion de bloques de codigo
 PEP:
 	* Los bloques de codigo se estructuran a partir de la indentacion de codigo y no a traves de otros elementos como las "{" "}"
 	* El espacio es de 4 caracteres para la indentacion
+	* La longitud maxima en linea de codigo sera de 79 caracteres
 	* Identacion a traves del caracter de tabulacion (\\t)
 """
 
