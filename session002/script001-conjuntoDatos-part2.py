@@ -23,7 +23,6 @@ tupla = ( 1, 0, 0 )
 #   * se define por los caracteres {}
 #   * no persiste elementos repetidos
 #   * a diferencia de los diccionarios no referencia un valor con una clave
-#   * a diferencia de los diccionarios no referencia un valor con una clave
 #   * es mutable
 
 conjunto = { 1, 2, 3, 4, 6, 7, 8, 9, 9, None }    # "None" es el tipo de dato vacio

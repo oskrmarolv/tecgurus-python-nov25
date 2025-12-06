@@ -8,6 +8,8 @@
 
 
 def update_monthly_expenses(expense_status, unit):
+	update_status = { }
+
 	return update_status, [ ]
 	pass
 
@@ -47,6 +49,8 @@ while True:
 		amount = input("tValor del gasto: ");
 
 		unit_expenses.append((category, amount))
+
+		print(unit_expenses)
 	
 	elif option == "3":
 		monthly_expenses, unit_expenses = update_monthly_expenses(monthly_expenses, unit_expenses)
