@@ -1,8 +1,11 @@
 #!/bin/python3
 
 """
+	MANEJO DE EXCEPCIONES
+
 	ACCESO A ARCHIVOS
 
+	INTRODUCCION A MODULOS
 """
 
 
@@ -33,29 +36,34 @@ print("CONTROL DE GASTOS +++");
 while True:
 	print("")
 	print("Selecciona una opcion:")
-	print("\t1) Estado actual de gastos")
+	print("\t1) Balance actual de gastos")
 	print("\t2) Registrar nuevo gasto")
-	print("\t3) Salir")
+	print("\t3) Actualizar balance")
+	print("\t4) Salir")
 	option = input(": ");
 
 	if option == "1":
-		print(f"{'Categoria':<15} | {'Acumulado':<15}")
-		print(f"{'-'*15} | {'-'*15}")
+		print("")
+		print(f"\t{'CATEGORIA':<15} | {'ACUMULADO':<15}")
+		print(f"\t{'-'*15} | {'-'*15}")
 		for category,amount in monthly_expenses.items():
-			print(f"{category:<15} | {amount:<15}")
+			print(f"\t{category:<15} | {amount:<15}")
+		print("")
 	
 	elif option == "2":
-		category = input("\tCategoria: ");
-		amount = input("tValor del gasto: ");
+		category = input("\tCategoria: ")
+		amount = input("tValor del gasto: ")
 
 		unit_expenses.append((category, amount))
 
 		print(unit_expenses)
 	
 	elif option == "3":
-		monthly_expenses, unit_expenses = update_monthly_expenses(monthly_expenses, unit_expenses)
+		pass
 
-		# SECCION QUE GUARDARA eEL STATUS DE "monthly_expenses" EN UN ARCHIVO
+	elif option == "4":
+
+		# SECCION QUE GUARDARA EL STATUS DE "monthly_expenses" EN UN ARCHIVO
 
 		break;
 
