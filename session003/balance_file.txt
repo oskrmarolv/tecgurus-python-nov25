@@ -1,0 +1,1 @@
+{'comida': 20.671834625322997, 'transporte': 1.0335917312661498, 'recreacion': 0.0, 'suscripciones': 36.17571059431524, 'universidad': 25.839793281653744, 'servicios': 36.17571059431524}
