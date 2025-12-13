@@ -13,15 +13,12 @@
 # 
 # 	Agregando definiciones para su implementacion en el proyecto
 #		import NOMBRE_PAQUETE
-# 		from NOMBRE_PAQUETE import DEFINICION
-# 		from NOMBRE_PAQUETE import DEFINICION as REFERENCIA
+# 		from NOMBRE_PAQUETE import DEFINICION, DEFINICION, DEFINICION, ...
+# 		from NOMBRE_PAQUETE import DEFINICION as REFERENCIA, DEFINICION as REFERENCIA, DEFINICION as REFERENCIA, ...
 
 import math 			# definiciones de la biblioteca "math" de python-core
-
 import random			# definiciones de la biblioteca "random" de python-core
-
 from datetime import datetime
-
 # from datetime import datetime as timestamp
 
 
@@ -67,19 +64,7 @@ def update_monthly_expenses(unit, expense_status):
 
 # SECCION DONDE RECUPERAMOS EL ULTIMO ESTADO DE "monthly_expenses"
 
-# MANEJO DE ARCHIVOS
-# 
-# Acceso a archivos
-#		* Creacion de archivos con notacion "snake_case"
-#		* La ruta del archivo se sugiere relativa
-#		
-# open(file, mode, encoding, newline)
-
-# Metodo modero (> 3.x.x)
-# 	use de with
-
 access_timestamp = datetime.now()
-
 
 monthly_expenses = None
 # monthly_expenses = { 
@@ -88,6 +73,19 @@ monthly_expenses = None
 # 	"recreacion": 0.0,
 # 	"suscripciones": 0.0
 # }
+
+# MANEJO DE ARCHIVOS
+# 
+# Acceso a archivos
+#		* Creacion de archivos con notacion "snake_case"
+#		* La ruta del archivo se sugiere relativa
+#
+# open(file, mode, encoding, newline)
+#  mode: r (read), (w writte), (a append)
+
+# Metodo modero (> 3.x.x)
+# 	use de with (Manejador de contexto)
+
 with open("balance_file.txt", 'r', encoding="utf-8") as last_balance_file:
 	data = last_balance_file.read()
 	monthly_expenses = eval(data)
@@ -152,6 +150,11 @@ while flow_ctrl:
 			print(f"La conversion a moneda no es valida!\nNo es posible registrar el monto para la categoria {category}.")
 			print("")
 
+		# except:
+			# NO SE RECOMIENDA: al ser un camino que me permite
+			# recuperar cualquier tipo de error se requeriria
+			# dar un tratamiento explicito a todo.
+
 		except Exception as error:
 			# BaseException: error generico que captura casos no contemplados
 			# 	"as" crea una referencia a un objeto principal
@@ -179,6 +182,7 @@ while flow_ctrl:
 
 			# Se suele utilizar para asegurar que algunas 
 			# operaciones se ejecutaran 
+
 			print(f"+ Gastos unitarios en sesion:")
 			print(f"  {unit_expenses}" )
 
