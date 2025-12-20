@@ -41,6 +41,7 @@
 		- Los usuarios tiene la posibilidad de operar con su dinero
 			- Para transferencias: cuenta es DEBITO el saldo aumento
 			- Para transferencias: cuenta es CREDITO el saldo disminuye
+			- Para transferencias: cuentas de CREDITO no pueden transferir
 """
 
 # REALIDAD: sistema bancario
@@ -98,7 +99,7 @@ class Account:
 
 	# Atributo (de clase)
 	# seq_account_id = 1000
-	__seq_account_id = 1000
+	__seq_account_id = 10000000
 
 	def __init__(self, user, type_account):
 		# atributo de instancia tipo "private"
@@ -117,7 +118,7 @@ class Account:
 
 	# SETTER / GETTER
 	@property
-	def identification(self):
+	def id(self):
 		return self.__id
 
 	def deposit(self):
@@ -203,6 +204,51 @@ class CreditAccount(Account):
 			self.__balance -= amount
 
 
+class GuruBank:
+	
+	def __init__(self):
+		self.name = "GURU-BANK"
+		self.__accounts = { }
+
+	def account_list(self):
+		print(f"----- {self.name}: Account's -----")
+		print("")
+
+		if not self.__accounts:
+			print("\twithout accounts...")
+
+		print(f"# | Owner | Type | Balance (current)")
+		print(f"{"-"*10} | {"-"*10} | {"-"*10} | {"-"*10}")
+		for id, row in self.__accounts.items():
+			print(id, row[0].name, row[1].type, row[1].balance)
+
+	def account_opening(self, user, type_account, amount = 0.0):
+		# { account_id: (user, account) }
+		match type_account:
+			case "debit":
+				account = DebitAccount(user, amount)
+
+			case "credit":
+				account = CreditAccount(user)
+
+			case _:
+				print("ERROR :: Tipo de cuenta no reconocida")
+				return
+
+		account_id = account.id
+		self.__accounts[account_id] = (user, account)
+
+	def transaction_transfer(self):
+		pass
+
+	def transaction_deposit(self):
+		pass
+
+	def transaction_retreat(self):
+		pass
+
+
+
 print("")
 print("")
 # ----------------------------------------------
@@ -210,26 +256,22 @@ print("")
 # ----------------------------------------------
 
 if __name__ == "__main__":
-
-	print("GURU-BANK")
+	gurubank = GuruBank()
 
 	# Invocando el metodo __init__() de la clase
 	# 	_.__create__(User) 								-> self
 	# 	User.__init__(self, **kwargs)			-> object
 	usuario_oscar = User("Oscar", "30", "2378458723-465")
+	usuario_gabriel = User("Gabriel", "28", "2378458723-462")
+	usuario_jonathan = User("Jonathan", "20", "2378458723-466")
+	usuario_maya = User("Maya", "27", "2378458723-469")
 
-	cuenta_debito_oscar = DebitAccount(usuario_oscar)
-	cuenta_credito_oscar = CreditAccount(usuario_oscar)
+	gurubank.account_opening(usuario_oscar, "debit", 100.0)
+	gurubank.account_opening(usuario_gabriel, "credit")
+	gurubank.account_opening(usuario_jonathan, "afore", 100.0)
+	gurubank.account_opening(usuario_maya, "debit", 500.0)
 
-	print("Saldo cuenta debito (inicial)", cuenta_debito_oscar.balance)
-	cuenta_debito_oscar.deposit(100)
-	print("Saldo cuenta debito (final)", cuenta_debito_oscar.balance)
-
-	print("Saldo cuenta credito (inicial)", cuenta_credito_oscar.balance)
-	cuenta_credito_oscar.deposit(100)
-	print("Saldo cuenta credito (final)", cuenta_credito_oscar.balance)
-
-	
+	gurubank.account_list()
 
 # ----------------------------------------------
 # end -----------------------------------------
