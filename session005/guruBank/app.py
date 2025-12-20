@@ -73,6 +73,7 @@ class User:
 		self.name = name
 		self.age = age
 		self.ine_id = ine_id
+		self.key = "tecgurus"
 
 	# Metodo (de instancia)
 	def show_ine_id(self):
@@ -218,6 +219,22 @@ class CreditAccount(Account):
 		else: 
 			return False
 
+# PROPUESTA 
+# Busca generar una realidad mucho mas dinamica
+class SystemBank: 
+	
+	def __init__(self, user):
+		self.user = user
+		self.__accounts = { }
+		self.__confidential = {
+			key: "tecgurus"
+		}
+
+	def create_account(self, type_account, amount = 0.0):
+		pass
+
+	def is_authorized(self, key):
+		pass
 
 class GuruBank:
 	
@@ -282,13 +299,11 @@ class GuruBank:
 		else:
 			return False
 
-	def transaction_account_deposit(self):
+	def transaction_account_deposit(self, account, amount, user_key):
 		pass
 
-	def transaction_retreat(self):
+	def transaction_retreat(self, account, amount, user_key):
 		pass
-
-
 
 print("")
 print("")
