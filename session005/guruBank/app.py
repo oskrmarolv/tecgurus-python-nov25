@@ -74,9 +74,6 @@ class User:
 		self.ine_id = ine_id
 
 	# Metodo (de instancia)
-	def hello(self):
-		return f"Hello! My name is {self.name} 😎"
-
 	def show_ine_id(self):
 		return self.ine_id
 
@@ -99,48 +96,33 @@ class Account:
 	Define las propiedades, caracteristicas que hacen unico a una cuenta de banco
 	"""
 
-	# Atributo (de clase): similar al modificador de acceso "protected"
-	#						en otros lenguajes de programacion porque estaria
-	#						directamente asociado a una clase (no a una instancia)
+	# Atributo (de clase)
 	# seq_account_id = 1000
 	__seq_account_id = 1000
 
-	def __init__(self, type):
+	def __init__(self, user, type_account):
 		# atributo de instancia tipo "private"
-		#	python crear un arbol del tipo => self.__Account__.__id
-		# self.__id = Account.seq_account_id
 		self.__id = Account.__seq_account_id
 
 		# atributo de instancia tipo "protected"
-		# 	python lo ve como un atributor publico pero
-		#		se le indica al desarrollador que sea tratado
-		#		como "protected"
 		self._status = "active"
 
 		# atributo de instancia tipo "public"
-		self.type = type		# credit | debit
+		self.owner = user
+		self.type = type_account
+		self.note = "Cuenta de bancop generica"
 
 		# atributo de clase
 		Account.__seq_account_id += 1
 
 	# SETTER / GETTER
-	#
-	# DECORADORES: etiquetas que indican al intrerprete  de python
-	# que la definicion debe tener un comportamiento especifico
-	#		@property
-	#		@ALIAS_NAME.setter
 	@property
 	def identification(self):
 		return self.__id
 
-	# NOTA: NO TIENE SENTIDO DEFINIR TANTO SETTER + GETTER
-	# PARA UN MISMO ATRIBUTO PRIVADO
-	@identification.setter
-	# def identification(self, new_id):
-	# 	if new_id > 0:
-	# 		self.__id = new_id
-	# 	else:
-	# 		print("El valor de ID no es valido")
+	def deposit(self):
+		print(f"Operacion generica de deposito a cuenta {self.type}")
+
 
 # POO: Herencia
 # 	Mecanismo a travez del cual una clase (sub-clase 
@@ -155,35 +137,57 @@ class Account:
 #		pass
 #	
 # PROBLEMA DEL DIAMANTE (consecuencia de la multi-herencia)
-#	MRO: local -> NombreClasePadreA -> NombreClasePadreB -> ...
-#			el proceso termina en el primer instante 
-#			que encuentra una coincidencia
-class AccountBank(Account):
-	"""docstring for AccountBank"""
-	def __init__(self, user: User, type_account: str, initial_balance: float = 0.0):
-		self.user = user
+#		MRO: local 	-> 	NombreClasePadreA 	-> 	NombreClasePadreB 	-> 	...
+#
+#		el proceso termina en el primer instante 
+#		que encuentra una coincidencia
+class DebitAccount(Account):
+	"""
+	Clase que define una cuenta de tipo "debit"
+	"""
+
+	TYPE = "debit"
+
+	def __init__(self, user: User, initial_balance: float = 0.0):
 		self.__balance = initial_balance
 
-		# super()  accede a la definicion de la clase-padre para instanciar
+		# super() 
+		# Accede a la definicion de la clase-padre para instanciar
 		# 		Account.__init__(*args)
-		super().__init__(type_account)
+		super().__init__(user, DebitAccount.TYPE)
 
 	@property
 	def balance(self):
 		return self.__balance
-	
-	def deposit(self, amount: float):
-		if self.type == "credit":
-			self.__balance -= amount
-		elif self.type == "debit":
-			self.__balance += amount
-		else:
-			print("Tipo de cuenta no identificada")
 
 
+# POO: Polimorfismo
+# 	Proceso mediante el cual, a traves de la herencia,
+# 	clases similares realizan acciones de manera distintas
+#
+#  	Crea la base para el concepto de "especializacion"
+#		La defincion de clases que modifican su comporamiento
+# 	a un punto muy especifico
 
-class Bank:
-	pass
+class CreditAccount(Account):
+	"""
+	Clase que define una cuenta de tipo "credit"
+	"""
+	TYPE = "credit"
+
+	def __init__(self, user):
+		self.__balance = 5000.0
+
+		# super()
+		# Accede a la definicion de la clase-padre para instanciar
+		# 		Account.__init__(*args)
+		super().__init__(user, CreditAccount.TYPE)
+
+	@property
+	def balance(self):
+		return self.__balance
+
+
 
 
 print("")
@@ -194,46 +198,19 @@ print("")
 
 if __name__ == "__main__":
 
-	# INSTANCIANDO un objeto
-	#		A diferencia de otros lenguajes de programacion
-	#		no existe la palabra reservada "new" en el
-	#		proceso de instancia
-	#
+	print("GURU-BANK")
+
 	# Invocando el metodo __init__() de la clase
-	# 	_.__create__(User) 					-> self
-	# 	User.__init__(self, **kwargs)		-> object
+	# 	_.__create__(User) 								-> self
+	# 	User.__init__(self, **kwargs)			-> object
 	usuario_oscar = User("Oscar", "30", "2378458723-465")
-	print("Usuario:", usuario_oscar)
-	print(f"Identificador: {usuario_oscar.show_ine_id()}")
-	# usuario_oscar.hello()
 
-	# usuario_oscar.name = "Fulanito"			# tal ves esto no sea muy critico...
-	# usuario_oscar.hello()
+	cuenta_debito_oscar = DebitAccount(usuario_oscar)
+	cuenta_credito_oscar = CreditAccount(usuario_oscar)
 
-	# account_oscar = Account()
-	# account_oscar.__id = 5001				# esto es imposible en el contexto de modificar el atributo privado
-	# 										# realmente se se esta creando un atributo nuevo __id
-
-	# account_fulanito = Account()
-	# print(f"status: {account_fulanito._status}")
-	# print(f"el ID-ORIGINAL es: {account_fulanito.identification}")
-	# # SI EL GETTER estuviese definido...
-	# # account_fulanito.identification = -3000
-	# # print(f"el ID-MODIFICADO es: {account_fulanito.identification}")
-
-	#
-	# RETOMANDO AL USUARIO "oscar"
-	# 
-	print("")
-
-	account_bank_oscar = AccountBank(usuario_oscar, "debit", 100.0)
-	print("Estado de la cuenta:", account_bank_oscar._status)
-	print("ID de la cuenta:", account_bank_oscar.identification)
-	print("Usuario:", account_bank_oscar.user.hello())
-	print("Usuario:", account_bank_oscar.user)
-	print("Saldo inicial", account_bank_oscar.balance)
-	account_bank_oscar.deposit(50.0)
-	print("Saldo actual", account_bank_oscar.balance)
+	cuenta_debito_oscar.deposit()
+	cuenta_credito_oscar.deposit()
+	
 
 # ----------------------------------------------
 # end -----------------------------------------
