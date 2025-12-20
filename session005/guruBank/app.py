@@ -160,6 +160,11 @@ class DebitAccount(Account):
 	def balance(self):
 		return self.__balance
 
+	# Sobreescritura de metodos
+	#		solo puede darse en metodos de instancia
+	def deposit(self, amount):
+		if amount > 0.0:
+			self.__balance += amount
 
 # POO: Polimorfismo
 # 	Proceso mediante el cual, a traves de la herencia,
@@ -168,7 +173,11 @@ class DebitAccount(Account):
 #  	Crea la base para el concepto de "especializacion"
 #		La defincion de clases que modifican su comporamiento
 # 	a un punto muy especifico
-
+#
+#		sobreescritura de metodos: que sobreescribe el comportamiento
+#					de un metodo para hacerlo propio en una clase
+#
+#		En Python no existe la sobrecarga de metodos (*args, **kwargs)
 class CreditAccount(Account):
 	"""
 	Clase que define una cuenta de tipo "credit"
@@ -187,7 +196,11 @@ class CreditAccount(Account):
 	def balance(self):
 		return self.__balance
 
-
+	# Sobreescritura de metodos
+	#		solo puede darse en metodos de instancia
+	def deposit(self, amount): 
+		if amount > 0.0:
+			self.__balance -= amount
 
 
 print("")
@@ -208,8 +221,14 @@ if __name__ == "__main__":
 	cuenta_debito_oscar = DebitAccount(usuario_oscar)
 	cuenta_credito_oscar = CreditAccount(usuario_oscar)
 
-	cuenta_debito_oscar.deposit()
-	cuenta_credito_oscar.deposit()
+	print("Saldo cuenta debito (inicial)", cuenta_debito_oscar.balance)
+	cuenta_debito_oscar.deposit(100)
+	print("Saldo cuenta debito (final)", cuenta_debito_oscar.balance)
+
+	print("Saldo cuenta credito (inicial)", cuenta_credito_oscar.balance)
+	cuenta_credito_oscar.deposit(100)
+	print("Saldo cuenta credito (final)", cuenta_credito_oscar.balance)
+
 	
 
 # ----------------------------------------------
