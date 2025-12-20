@@ -122,8 +122,10 @@ class Account:
 		return self.__id
 
 	def deposit(self):
-		print(f"Operacion generica de deposito a cuenta {self.type}")
+		return None
 
+	def retreat(self):
+		return None
 
 # POO: Herencia
 # 	Mecanismo a travez del cual una clase (sub-clase 
@@ -166,6 +168,16 @@ class DebitAccount(Account):
 	def deposit(self, amount):
 		if amount > 0.0:
 			self.__balance += amount
+			return True
+		else:
+			return False
+
+	def retreat(self, amount):
+		if amount > 0.0 and amount > self.__balance:
+			self.__balance -= amount
+			return amount
+		else: 
+			return None
 
 # POO: Polimorfismo
 # 	Proceso mediante el cual, a traves de la herencia,
@@ -202,28 +214,44 @@ class CreditAccount(Account):
 	def deposit(self, amount): 
 		if amount > 0.0:
 			self.__balance -= amount
+			return True
+		else: 
+			return False
 
 
 class GuruBank:
 	
 	def __init__(self):
-		self.name = "GURU-BANK"
+		self.name = "GURU-BAN"
+		# { account_id: (user, account) }
 		self.__accounts = { }
 
-	def account_list(self):
+	def get_account_list(self):
 		print(f"----- {self.name}: Account's -----")
 		print("")
 
 		if not self.__accounts:
 			print("\twithout accounts...")
 
-		print(f"# | Owner | Type | Balance (current)")
+		print(f"{"#":<10} | {"Owner":<10} | {"Type":<10} | Balance (current)")
 		print(f"{"-"*10} | {"-"*10} | {"-"*10} | {"-"*10}")
 		for id, row in self.__accounts.items():
-			print(id, row[0].name, row[1].type, row[1].balance)
+			user, account = row
+			print(f"{id:<10} | {user.name:<10} | {account.type:<10} | {account.balance:<10}")
 
-	def account_opening(self, user, type_account, amount = 0.0):
-		# { account_id: (user, account) }
+	def get_accounts_by_user_id(self, ine_to_search):
+		accounts = [ ]
+
+		for account_id, row in self.__accounts.items():
+				user, account = row
+
+				if ine_to_search == user.ine_id:
+					accounts.append(account_id)
+
+		return accounts
+
+	def create_account(self, user, type_account, amount = 0.0):
+		account = None
 		match type_account:
 			case "debit":
 				account = DebitAccount(user, amount)
@@ -232,16 +260,28 @@ class GuruBank:
 				account = CreditAccount(user)
 
 			case _:
-				print("ERROR :: Tipo de cuenta no reconocida")
-				return
+				return False
 
-		account_id = account.id
-		self.__accounts[account_id] = (user, account)
+		self.__accounts[account.id] = (user, account)
+		return True
 
-	def transaction_transfer(self):
-		pass
+	def transaction_account_transfer(self, orig, dest, amount_to_tranfer):
+		if not orig in self.__accounts or not dest in self.__accounts:
+			return
 
-	def transaction_deposit(self):
+		user_orig, account_orig = self.__accounts[orig]
+		user_dest, account_dest = self.__accounts[dest]
+
+		if account_orig.type == "credit":
+			return False
+
+		amount = account_orig.retreat(amount_to_tranfer)
+		if amount:
+			return account_dest.deposit(amount)
+		else:
+			return False
+
+	def transaction_account_deposit(self):
 		pass
 
 	def transaction_retreat(self):
@@ -266,12 +306,24 @@ if __name__ == "__main__":
 	usuario_jonathan = User("Jonathan", "20", "2378458723-466")
 	usuario_maya = User("Maya", "27", "2378458723-469")
 
-	gurubank.account_opening(usuario_oscar, "debit", 100.0)
-	gurubank.account_opening(usuario_gabriel, "credit")
-	gurubank.account_opening(usuario_jonathan, "afore", 100.0)
-	gurubank.account_opening(usuario_maya, "debit", 500.0)
+	gurubank.create_account(usuario_oscar, "debit", 100.0)
+	gurubank.create_account(usuario_gabriel, "credit")
+	gurubank.create_account(usuario_jonathan, "afore", 100.0)
+	gurubank.create_account(usuario_maya, "debit", 500.0)
+	gurubank.create_account(usuario_oscar, "credit")
 
-	gurubank.account_list()
+
+	gurubank.get_account_list()
+
+	# transacciones...
+	accounts_oscar = gurubank.get_accounts_by_user_id(usuario_oscar.ine_id)
+	accounts_gabriel = gurubank.get_accounts_by_user_id(usuario_gabriel.ine_id)
+
+	account_orig = accounts_oscar[0]
+	account_dest = accounts_gabriel[0]
+	gurubank.transaction_account_transfer(account_orig, account_dest, 100.0)
+	gurubank.get_account_list()
+	
 
 # ----------------------------------------------
 # end -----------------------------------------
