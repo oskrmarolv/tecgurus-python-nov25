@@ -4,7 +4,7 @@
   PROGRAMACION ORIENTADA A OBJETOS (POO)
   EN PYTHON
 
-  La POO es un paradigma en la programacion que busca simular la realidad (REALIDAD: es el entorno donde el clase/objeto tienen sentido) al abstraerla en terminos simples
+  La POO es un paradigma en la programacion que busca simular la realidad (REALIDAD: es el entorno donde el ente tienen sentido) al abstraerla en terminos simples
   
   Algunos tipos de paradigmas en la programacion
 	- Estructurada
@@ -23,11 +23,11 @@
 
   > Conceptos fundamentales
 
-	CLASE: Plantalla o Estructura base que me permite definir en terminos simples ALGO dentro de una realidad
+	CLASE: Plantalla o Estructura base que me permite definir en terminos simples ente dentro de una realidad
 	  - Atributos: valores
 	  - Metodos: acciones
 
-	OBJETO: La creacion de un ALGO a partir de la definicion de una clase que asigna valores concretos a 
+	OBJETO: La creacion de un ENTE a partir de la definicion de una clase que asigna valores concretos a 
 			los atributos y/o metodos (INSTANCIAR un objeto)
 """
 
@@ -47,7 +47,7 @@
 
 # POO: ABSTRACCION
 #   Es la definicion de las caracteristicas
-#   primordiales que hace que un ALGO 
+#   primordiales que hace que un ente 
 #   pueda exisitir dentro de una realidad
 
 # Definicion de CLASE
@@ -81,18 +81,18 @@ class User:
 		return self.ine_id
 
 	# __str__()
-	# Equivalente a oject.toString() en otros lenguajes de programacion
+	# Equivalente a object.toString() en otros lenguajes de programacion
 	def __str__(self):
 		return f"{self.name} (id: {self.ine_id})"
 
 # POO: Encapsulamiento
 # 	Permite marcar un limite en como se define la
-#	clase y como interactual con elementos externos
+#		clase y como interactual con elementos externos
 #
 #		No existe el concepto de "Modificadores de acceso"
 #		como en otros lenguajes de programacion
-#			- public 		todo es publico 
-#			- protected		no existe
+#			- public 			todo es publico 
+#			- protected		no existe. solo es "MORAL"
 #			- private 		se simula
 class Account:
 	"""
@@ -100,18 +100,21 @@ class Account:
 	"""
 
 	# Atributo (de clase): similar al modificador de acceso "protected"
-	#						en otros lenguajes de programacion
+	#						en otros lenguajes de programacion porque estaria
+	#						directamente asociado a una clase (no a una instancia)
+	# seq_account_id = 1000
 	__seq_account_id = 1000
 
 	def __init__(self, type):
 		# atributo de instancia tipo "private"
 		#	python crear un arbol del tipo => self.__Account__.__id
+		# self.__id = Account.seq_account_id
 		self.__id = Account.__seq_account_id
 
 		# atributo de instancia tipo "protected"
 		# 	python lo ve como un atributor publico pero
-		#	se le indica al desarrollador que sea tratado
-		#	como "protected"
+		#		se le indica al desarrollador que sea tratado
+		#		como "protected"
 		self._status = "active"
 
 		# atributo de instancia tipo "public"
@@ -131,8 +134,8 @@ class Account:
 		return self.__id
 
 	# NOTA: NO TIENE SENTIDO DEFINIR TANTO SETTER + GETTER
-	# a un atributo que es "private"
-	# @identification.setter
+	# PARA UN MISMO ATRIBUTO PRIVADO
+	@identification.setter
 	# def identification(self, new_id):
 	# 	if new_id > 0:
 	# 		self.__id = new_id
@@ -141,8 +144,8 @@ class Account:
 
 # POO: Herencia
 # 	Mecanismo a travez del cual una clase (sub-clase 
-#	o clase-hija) retoma definiciones desde otra 
-#	clase superior (super-clase o clase-padre)
+#		o clase-hija) retoma definiciones desde otra 
+#		clase superior (super-clase o clase-padre)
 #		
 #	* No hereda nada que sea "private"
 #	* Si existe la multi-herencia y es resuelta mediante "MRO" (Module Resolution Order)
@@ -151,6 +154,7 @@ class Account:
 #	class NombreClase(NombreClasePadreA, NombreClasePadreB, ...):
 #		pass
 #	
+# PROBLEMA DEL DIAMANTE (consecuencia de la multi-herencia)
 #	MRO: local -> NombreClasePadreA -> NombreClasePadreB -> ...
 #			el proceso termina en el primer instante 
 #			que encuentra una coincidencia
