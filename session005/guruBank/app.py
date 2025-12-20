@@ -173,7 +173,7 @@ class DebitAccount(Account):
 			return False
 
 	def retreat(self, amount):
-		if amount > 0.0 and amount > self.__balance:
+		if amount > 0.0 and self.__balance >= amount:
 			self.__balance -= amount
 			return amount
 		else: 
@@ -227,6 +227,7 @@ class GuruBank:
 		self.__accounts = { }
 
 	def get_account_list(self):
+		print("")
 		print(f"----- {self.name}: Account's -----")
 		print("")
 
@@ -275,7 +276,7 @@ class GuruBank:
 		if account_orig.type == "credit":
 			return False
 
-		amount = account_orig.retreat(amount_to_tranfer)
+		amount = account_orig.retreat(amount_to_tranfer) 
 		if amount:
 			return account_dest.deposit(amount)
 		else:
@@ -312,7 +313,8 @@ if __name__ == "__main__":
 	gurubank.create_account(usuario_maya, "debit", 500.0)
 	gurubank.create_account(usuario_oscar, "credit")
 
-
+	print("")
+	print("Estado inicial...")
 	gurubank.get_account_list()
 
 	# transacciones...
@@ -322,8 +324,11 @@ if __name__ == "__main__":
 	account_orig = accounts_oscar[0]
 	account_dest = accounts_gabriel[0]
 	gurubank.transaction_account_transfer(account_orig, account_dest, 100.0)
+
+	print("")
+	print("Al finalizar operaciones...")
 	gurubank.get_account_list()
-	
+
 
 # ----------------------------------------------
 # end -----------------------------------------
