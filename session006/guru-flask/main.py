@@ -73,7 +73,9 @@ def home():
 
 @app.post("/users")
 def create_users():
-	payload = request.get_json(silent=True)
+	payload = request.get_json(silent=True) # null -> None, permite omitir posibles errores en el cast de valores JSON a Python
+	# { name:null } -> silent=True { }
+	# 							-> silent=False ERROR!!
 	print("data_request", type(payload), payload)
 
 	new_user = UserOrm(name = payload["name"], age = payload.get("age"))
