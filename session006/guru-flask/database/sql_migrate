@@ -1,0 +1,7 @@
+-- creando base de datos --
+CREATE DATABASE guru_api CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- creando usuario --
+CREATE USER 'guru_test'@'%' IDENTIFIED BY 'guru_test';
+GRANT ALL PRIVILEGES ON guru_test.* TO 'guru_test'@'%';
+FLUSH PRIVILEGES;
