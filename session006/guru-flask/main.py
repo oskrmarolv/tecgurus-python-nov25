@@ -11,9 +11,35 @@
 #   - GraphQL (http)
 
 from flask import Flask, request, jsonify, render_template
-
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)       # instancia principal de la aplicacion
+
+
+# Conexion a base de datos con SQLAlchemy...
+# URI: 
+# 	protocolo :// user:pass@host:port / resources ? query
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://guru_test:guru_test@127.0.0.1:3306/guru_api"
+
+db = SQLAlchemy(app)
+
+# ORM de Users
+class UserOrm(db.Model):
+	# atributos de clase -> definicion de tabla en SQL
+	__tablename__ = "users"
+
+	id = db.Column(db.Integer, primary_key = True)
+	name = db.Column(db.String(128), nullable = False)
+	age = db.Column(db.Integer, nullable = True)
+
+	# metodos de clase
+	def to_dict(self):
+		return { "id":self.id, "name":self.name }
+
+# creacion de recursos iniciales en la DB
+with app.app_context():
+	db.create_all()
+
 
 # definicion de rutas...
 
@@ -45,35 +71,66 @@ def home():
 # Concept de CRUD: operaciones basicas
 # C - R - U - D
 
-USERS = [
-	{ "id":"10001", "name":"Oscar" },
-	{ "id":"10002", "name":"Gabriel" },
-	{ "id":"10003", "name":"Maya" },
-	{ "id":"10004", "name":"Jonathan" }
-]
+@app.post("/users")
+def create_users():
+	payload = request.get_json(silent=True)
+	print("data_request", type(payload), payload)
 
-#@app.post("/users")
-#def create_users():
-#	pass
+	new_user = UserOrm(name = payload["name"], age = payload.get("age"))
+
+	# db.session
+	# stack con las transacciones pendientes a la DB
+
+	# db.session.add(): agrega un elemento al stack de transacciones
+	db.session.add(new_user)			# transformar a SQL el estado actual de la instancia
+
+	# db.session.commit(): se dispara una solicitud de escritura a la DB
+	db.session.commit()					# ejecuta el stack actual de sentencias SQL en la DB
+
+	response_data = {
+		"status": {
+			"code": 0,
+			"desc": "Success"
+		},
+		"data": new_user.to_dict()
+	}
+	return jsonify(response_data), 201
 
 @app.get("/users")
 def read_users():
+	users = UserOrm.query.order_by(UserOrm.name.asc()).all()
+
 	# Objeto respuesta
 	response_data = {
 		# cual es el status del proceso interno
 		"status": {
-			"code": "0x100",
-			"desc": "Incomplete"
+			"code": "0",
+			"desc": "Success"
 		},
 		# payload interno del proceso
-		"data": USERS
+		"data": [ user.to_dict() for user in users ]
 	}
-
 	return jsonify(response_data), 200
 
-#@app.put("/users")
-#def update_users():
-#	pass
+@app.put("/users")
+def update_users():
+	payload = request.get_json(silent = True)
+	user_id = payload["id"]
+	update_name = payload["name"]
+
+	user_to_update = db.session.get(UserOrm, user_id)
+	user_to_update.name = update_name
+	db.session.add(user_to_update)
+	db.session.commit()
+
+	response_data = {
+		"status": {
+			"code": 0,
+			"desc": "Success"
+		},
+		"data": user_to_update.to_dict()
+	}
+	return jsonify(response_data), 200
 
 #@app.delete("/users")
 #def delete_users():

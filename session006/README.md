@@ -5,4 +5,11 @@
 
 * `pip`
 * `venv`
-* `flask`
+
+## Dependencias
+
+* pip install flask
+* pip install PyMySQL
+* pip install SQLAlchemy
+* pip install Flask-SQLAlchemy
+* pip install cryptography
